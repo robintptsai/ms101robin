@@ -1,0 +1,21 @@
+<?py include('admin_header.html') ?>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><label for="feed">Feed</label> <div class="input-field"><input type="text" id="feed" name="feed" value="#{{BLOG_FEED_URL}}"/></div></div>
+		<div><label>Request mode</label>
+			<div class="input-field">
+				<label for="subscribe">subscribe</label> <input type="radio" id="subscribe" name="mode" value="subscribe" checked="checked"/>
+				<label for="unsubscribe">unsubscribe</label> <input type="radio" id="unsubscribe" name="mode" value="unsubscribe"/>
+				<label for="ping">publish</label> <input type="radio" id="ping" name="mode" value="ping"/>
+			</div>
+		</div>
+		<div><input type="submit" value="submit"/></div>
+	</form>
+	<div class="notice">Notice:
+		<ul>
+			<li>This function can be used to subscribe your own feed via PubSubHubbub, so that Google Reader will record your feed immediately after its publishing.</li>
+			<li>You will receive a notification email after verification, then you can go to <a href="https://pubsubhubbub.appspot.com/publish">publish and check your feed</a>.</li>
+			<li>Your feed will be automatically published when posting new article or comment. But if it didn't be recorded, you can use the "publish" function to publish it again.</li>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

@@ -1,0 +1,122 @@
+<?py
+_context['_load_tag_js'] = True
+for _ in cache_as('siderbar', SIDEBAR_BAR_CACHE_TIME):
+	from math import log
+	from model import Tag, Category, Comment
+
+	latest_comments = Comment.latest_comments(LATEST_COMMENTS_FOR_SIDEBAR)
+	categories = Category.get_all_categories()
+	tags = Tag.get_all_tags()
+?>
+<section id="sidebar">
+<?PY if ONLINE_VISITORS_EXPIRY_TIME > 0: ?>
+<?py
+	online_visitors = request.online_visitors
+	now = int(time())
+	new_online_visitors = online_visitors.copy()
+	online_visitors_num = len(online_visitors)
+	for visitor, expiry_time in online_visitors.iteritems():
+		if expiry_time < now:
+			del new_online_visitors[visitor]
+		#endif
+	#endfor
+	online_visitors = len(new_online_visitors)
+	if online_visitors_num != online_visitors:
+		memcache.set('online_visitors', new_online_visitors)
+	#endif
+?>
+	<section id="online_visitors" class="widget">
+		<h4>Online visitors</h4>
+		<p>
+<?py 	if online_visitors < 10: ?>
+	Hmmm, only #{online_visitors} online visitors, I feel no pressure.
+<?py 	elif online_visitors < 100: ?>
+	Well, #{online_visitors} online visitors, I feel a little bit of pressure.
+<?py 	else: ?>
+	Wow, #{online_visitors} online visitors, I'm under a lot of pressure!
+<?py 	#endif ?>
+		</p>
+	</section>
+<?PY #endif ?>
+	<section id="latest-comments" class="widget">
+		<h4>Latest comments</h4>
+		<ul>
+<?py
+	isHttps = request.scheme == 'https'
+	for (comment, article, user) in izip(*latest_comments):
+		content = strip_html(comment.html_content(), LATEST_COMMENTS_LENGTH)
+?>
+			<li><img src="#{user.get_gravatar(isHttps)}?s=30&amp;d=monsterid" class="avatar" height="30" width="30" alt="${user.name}"/><span class="comment-header"><strong>${user.name}</strong> <small>(${time_from_now(comment.time)})</small></span><p class="comment-quote"><a href="#{{BLOG_HOME_RELATIVE_PATH}}#{quoted_string(article.url)}">#{content}</a></p></li>
+<?py 	#endfor ?>
+		</ul>
+	</section>
+<?PY if TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET: ?>
+<?py
+	tweets = memcache.get('recent_tweets')
+	if tweets:
+		name, tweets = tweets
+?>
+	<section id="recent-tweets" class="widget">
+		<h4>Twitter <a href="https://twitter.com/#{name}">@#{name}</a></h4>
+		<ul>
+<?py 		for tweet in tweets: ?>
+			<li>#{tweet['text']}<small>—#{time_from_now(tweet['timestamp'])}</small></li>
+<?py 		#endfor ?>
+		</ul>
+	</section>
+<?py 	#endif ?>
+<?PY #endif ?>
+	<section id="categories" class="widget">
+		<h4>Categories</h4>
+		<ul>
+<?py
+	if categories:
+		next_levels = [category.level() for category in categories[1:]] + [1]
+		for category, next_level in izip(categories, next_levels):
+			category_name = escape(category.key().name())
+			link = '<a href="%scategory/%s">%s</a>' % (BLOG_HOME_RELATIVE_PATH, quoted_string(category_name), category_name)
+			current_level = category.level()
+			if current_level == next_level:
+?>
+			<li>#{link}</li>
+<?py 			elif current_level < next_level: ?>
+			<li>#{link}<ul>
+<?py 			else: ?>
+			<li>#{link}</li>#{'</ul></li>' * (current_level - next_level)}
+<?py
+			#endif
+		#endfor
+	#endif
+?>
+		</ul>
+	</section>
+	<section id="tags" class="widget">
+		<h4>Tags</h4>
+<?py
+	for tag in tags:
+		tag_name = escape(tag.key().name())
+?>
+			<a href="#{{BLOG_HOME_RELATIVE_PATH}}tag/#{quoted_string(tag_name)}" style="font-size:#{int(3 * log(max(tag.count + 1, 1))) + 12}px">#{tag_name}</a>
+<?py 	#endfor ?>
+	</section>
+<?PY if	LINKS: ?>
+	<section id="links" class="widget">
+		<h4>Links</h4>
+		<ul>
+<?PY
+	for link in LINKS:
+		rel = link.get('rel', '')
+		if rel:
+?>
+			<li><a href="#{{link['url']}}" rel="#{{rel}}">#{{link['text']}}</a></li>
+<?PY 		else: ?>
+			<li><a href="#{{link['url']}}">#{{link['text']}}</a></li>
+<?PY
+		#endif
+	#endfor
+?>
+		</ul>
+	</section>
+<?PY #endif ?>
+</section>
+<?py #endfor ?>

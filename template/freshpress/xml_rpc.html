@@ -1,0 +1,15 @@
+<?py include('admin_header.html') ?>
+<div class="info"></div>
+<form method="post" action="">
+	<div><label for="username">User name</label> <div class="input-field"><input type="text" id="username" name="username" value="${xml_rpc.username if xml_rpc else ''}"/></div></div>
+	<div><label for="password">Password</label> <div class="input-field"><input type="password" id="password" name="password" placeholder="Password has been hidden."/></div></div>
+	<div><input type="submit" value="Save"/></div>
+</form>
+<div class="notice">Notice:
+	<ul>
+		<li>This function makes you be able to manage your blog by blog publishing software (eg: Windows Live Writer). Set user name or password to empty can disable this function.</li>
+		<li>It support Blogger API, MetaWeblog API and some method of WordPress API as so far.</li>
+		<li>If your blog publishing software can't auto-detect, you can input these addresses manually: RSD address is <a href="#{{BLOG_HOME_FULL_URL}}rsd">#{{BLOG_HOME_FULL_URL}}rsd</a>, XML-RPC API address is <a href="#{{BLOG_HOME_FULL_URL}}rpc">#{{BLOG_HOME_FULL_URL}}rpc</a>.</li>
+	</ul>
+</div>
+<?py include('admin_footer.html') ?>

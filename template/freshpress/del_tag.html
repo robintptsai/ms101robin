@@ -1,0 +1,30 @@
+<?py include('admin_header.html') ?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}tag/new/">New tag</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}tag/delete/" class="current">Delete tag</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}tag/move/">Move tag</a>
+	</nav>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><label for="name">Tag name</label>
+			<div class="input-field">
+			<select id="name" name="name">
+<?py
+for tag in tags:
+	tag = tag.key().name()
+?>
+				<option value="${tag}">${tag}</option>
+<?py #endfor ?>
+			</select>
+			</div>
+		</div>
+		<div><input type="submit" value="Delete"/></div>
+	</form>
+	<div class="notice">Notice:
+		<ul>
+			<li>Delete tag will change the tags property of its articles. You can <a href="#{{BLOG_ADMIN_RELATIVE_PATH}}tag/move/">move its articles to other tag</a> before this operation.</li>
+			<li>This operation may take much time, so please don't change this tag or its articles until you receive a mail that notices the task has been finished.</li>
+			<li>If you don't receive notification email for a long time, you can login to the <a href="https://appengine.google.com">Admin Console</a> to check the status of Task Queues, and delete it if needed.</li>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

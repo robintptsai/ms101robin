@@ -1,0 +1,25 @@
+<?py
+from tenjin.html import checked
+include('header.html')
+user = request.current_user
+?>
+<section id="content">
+	<form action="" method="post" id="profileform">
+		<p>Email: #{user.key().name()}</p>
+		<p>Picture: (You can change it via <a href="http://www.gravatar.com/">gravatar</a>): <img src="#{user.get_gravatar(request.scheme == 'https')}?s=24&amp;d=monsterid" alt=""/></p>
+		<p>
+			<label for="name">User name<small>(required)</small></label><br/>
+			<input type="text" name="name" id="name" value="${user.name}" size="50" maxlength="15" tabindex="1"/>
+		</p>
+		<p>
+			<label for="site">Your site<small>（optional）</small></label><br/>
+			<input type="text" name="site" id="site" value="${user.site}" size="50" maxlength="100" tabindex="2"/>
+		</p>
+		<p>
+			<label for="mute">Do you want to receive email notification when your comment be replied?</label><br/>
+			<input type="checkbox" id="mute" name="mute"#{checked(user.flag & 4)} tabindex="3"/> <label for="mute">No, I don't want to be disturbed.</label>
+		</p>
+		<p><input name="submit" type="submit" id="submit" tabindex="3" value="Submit"/></p>
+	</form>
+</section>
+<?py include('footer.html') ?>

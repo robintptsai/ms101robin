@@ -1,0 +1,38 @@
+<?py
+include('admin_header.html')
+if msg:
+?>
+	<div class="msg">${msg}</div>
+<?py
+#endif
+if not use_pw:
+?>
+	<form method="get" action="">
+		<div><label for="feed">Google Calendar Feed</label> <div class="input-field"><input type="text" id="feed" name="feed" value="#{token.feed if token else 'http://www.google.com/calendar/feeds/default/private/full'}"/></div></div>
+<?py 	if token: ?>
+		<div><input type="submit" value="Get Token"/> <input type="button" value="Delete Token" id="del-token"/></div>
+<?py 	else: ?>
+		<div><input type="submit" value="Get Token"/></div>
+<?py 	#endif ?>
+	</form>
+<?py #endif ?>
+	<div class="notice">Notice:
+		<ul>
+			<li>Doodle uses <a href="https://www.google.com/calendar/">Google Calendar</a> to send SMS Notification, the Google Calendar account should be the same with ADMIN_EMAIL in setting.py.</li>
+			<li>You need verify your mobile phone at "Calendar Settings" - "Mobile Setup" via Google Calendar.</li>
+<?py if use_pw: ?>
+			<li>It's not recommended to use password to login, you can set ADMIN_PASSWORD to '' in setting.py to enable login by AuthSub, which need to do more settings, but safer.</li>
+<?py else: ?>
+			<li>If you use your own domail (not appspot.com domain), you need register your domain via Google's <a href="https://www.google.com/accounts/ManageDomains">Manage Your Domains</a> page. See more details at <a href="http://code.google.com/apis/accounts/docs/RegistrationForWebAppsAuto.html">Registration for Web-Based Applications</a>.</li>
+<?py #endif ?>
+			<li>The notification uses default calendar, you can switch to other calendar by this way:
+				<ol>
+					<li>Create or select a calendar, find out the "Private Address" at its "Calendar Settings". Its XML address should look like:<br/>
+					http://www.google.com/calendar/feeds/.....%40group.calendar.google.com/<span style="color:red">private-...../basic</span></li>
+					<li>Replace "private-...../basic" to "private/full", then you get the correct feed address:<br/>
+					http://www.google.com/calendar/feeds/.....%40group.calendar.google.com/<span style="color:red">private/full</span></li>
+				</ol>
+			</li>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

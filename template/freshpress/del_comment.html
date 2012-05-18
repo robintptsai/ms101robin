@@ -1,0 +1,15 @@
+<?py
+include('admin_header.html')
+if 'info' in _context:
+?>
+	<div class="info"></div>
+<?py #endif ?>
+	<form method="post" action="">
+		<div><input type="submit" value="Delete"/></div>
+	</form>
+	<div class="notice">Notice:
+		<ul>
+			<li>A comment can't be recovered after deleting.</li>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

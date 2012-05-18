@@ -1,0 +1,37 @@
+<?py include('admin_header.html') ?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/new/">New category</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/delete/">Delete category</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/move/" class="current">Move category</a>
+	</nav>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><label for="from_path">Source category path (separating by "${{CATEGORY_PATH_DELIMETER}}")</label>
+			<div class="input-field">
+			<select id="from_path" name="from_path">
+<?py for category in categories: ?>
+				<option value="${category.path}">${category.path}</option>
+<?py #endfor ?>
+			</select>
+			</div>
+		</div>
+		<div><label for="to_path">Object category path (separating by "${{CATEGORY_PATH_DELIMETER}}")</label>
+			<div class="input-field">
+			<select id="to_path" name="to_path">
+<?py for category in categories: ?>
+				<option value="${category.path}">${category.path}</option>
+<?py #endfor ?>
+			</select>
+			</div>
+		</div>
+		<div><input type="submit" value="移动"/></div>
+	</form>
+	<div class="notice">Notice:
+		<ul>
+			<li>If source category has sub categories, the articles of sub categories won't be moved to object category.</li>
+			<li>Object category must exist.</li>
+			<li>This operation may take much time, so please don't change these 2 categories or their articles until you receive a mail that notices the task has been finished.</li>
+			<li>If you don't receive notification email for a long time, you can login to the <a href="https://appengine.google.com">Admin Console</a> to check the status of Task Queues, and delete it if needed.</li>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

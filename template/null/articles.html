@@ -1,0 +1,17 @@
+<?py
+category_template = '<a href="' + BLOG_HOME_RELATIVE_PATH + 'category/%s">%s</a>'
+tag_template = '<a href="' + BLOG_HOME_RELATIVE_PATH + 'tag/%s">%s</a>'
+for article in articles:
+	dt = convert_to_local_time(article.time)
+	category_name = escape(article.category_name())
+	category_link = category_template % (quoted_string(category_name), category_name) if category_name else 'None'
+	tags = article.tags
+	tags_link = ', '.join([tag_template % (quoted_string(escape(tag)), escape(tag)) for tag in tags]) if tags else 'None'
+?>
+	<article class="post">
+		<h2 class="post-title"><a href="#{{BLOG_HOME_RELATIVE_PATH}}#{article.quoted_url()}" title="${article.title}">${article.title}</a></h2>
+		<p class="post-date"><span class="year">#{dt.year}</span> <span class="month">#{dt.strftime('%b')}</span> <span class="day">#{dt.day}</span> <span class="time">#{dt.strftime('%I:%M %p')}</span> <span class="postcomment">#{article.replies} comment#{'s' if article.replies > 1 else ''}</span> <span>#{article.hits} view#{'s' if article.hits > 1 else ''}</span></p>
+		<p class="post-data"><span class="postcategory">Category: #{category_link}</span> <span class="posttag">Tags: #{tags_link}</span></p>
+		<section class="article-content">#{article.html_summary()} <a href="#{{BLOG_HOME_RELATIVE_PATH}}#{article.quoted_url()}" class="more-link" title="Read more">More</a></section>
+	</article>
+<?py #endfor ?>

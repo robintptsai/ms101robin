@@ -1,0 +1,24 @@
+<?py include('admin_header.html') ?>
+<div class="info"></div>
+<div id="container">
+	<h3>Export datastore</h3>
+	<div class="grid">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}export">Download backup file</a>
+	</div>
+
+	<h3>Import datastore</h3>
+	<div class="grid">
+		<form method="post" action="" enctype="multipart/form-data">
+			<input type="file" name="file" id="file"/>
+			<input type="submit" value="Import"/>
+		</form>
+	</div>
+
+	<div class="notice">Notice:
+		<ul>
+			<li>If you import too many entities once, you may get an error due to no enough memory, quotas or timeout.</li>
+			<li>So it's recommended to use split_backup.py to split the backup file, then import the split ones.</li>
+		</ul>
+	</div>
+</div>
+<?py include('admin_footer.html') ?>

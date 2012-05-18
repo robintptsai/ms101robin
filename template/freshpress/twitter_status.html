@@ -1,0 +1,33 @@
+<?py include('admin_header.html') ?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}twitter/status" class="current">Twitter Statue</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}twitter/oauth">Associate with Twitter</a>
+	</nav>
+<?PY if TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET: ?>
+<?py if twitter: ?>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><textarea id="content" name="content" rows="4" cols="120" placeholder="Anything to post to Twitter?"></textarea></div>
+		<div><input type="submit" value="Tweet"/> <span id="left-count">140</span></div>
+	</form>
+<?py #endif ?>
+<?PY #endif ?>
+	<div class="notice">Notice:
+		<ul>
+			<li>This function makes you be able to share your article to Twitter.</li>
+<?PY if TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET: ?>
+<?py if twitter: ?>
+			<li>Your blog has associated with <a href="https://twitter.com/#{twitter.name}">@#{twitter.name}</a>.</li>
+			<li>You can disassociate your Twitter account from your blog via <a href="https://twitter.com/settings/connections">Twitter Connections</a> at any time.</li>
+			<li>You can also click here to <a href="oauth">associate</a> again.</li>
+<?py else: ?>
+			<li>Your blog hasn't associated with a Twitter account, you need click here to <a href="oauth">associate</a>.</li>
+<?py #endif ?>
+<?PY else: ?>
+			<li>You haven't set the Twitter consumer key and secret. To enable this function, you need to <a href="http://dev.twitter.com/apps/new">register an app at Twitter</a>.</li>
+			<li>When you registering, please set Application Type to "Browser", Callback URL to "#{{TWITTER_CALLBACK_URL}}", Default Access type to "Read & Write".</li>
+			<li>After you get the key and secret, please set TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET to them in the setting.py file.</li>
+<?PY #endif ?>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

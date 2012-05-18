@@ -1,0 +1,13 @@
+<?py include('admin_header.html') ?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}twitter/status">Twitter Statue</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}twitter/oauth" class="current">Associate with Twitter</a>
+	</nav>
+	<div class="notice">
+<?PY if TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET: ?>
+		Failed to fetch request token. Something is wrong with Google App Engine or Twitter. Please refresh this page to try again.</div>
+<?PY else: ?>
+		You haven't set the Twitter consumer key and secret. To enable this function, please see <a href="status">Twitter Status</a> to configure it.
+<?PY #endif ?>
+	</div>
+<?py include('admin_footer.html') ?>

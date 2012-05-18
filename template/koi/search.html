@@ -1,0 +1,36 @@
+<?py
+not_ajax = not request.is_xhr
+if not_ajax:
+	include('header.html')
+#endif
+?>
+<section id="content">
+<?py
+if articles:
+	include('articles.html')
+	if next_cursor:
+?>
+	<p class="post-nav"><span class="previous"><a href="#{{BLOG_HOME_RELATIVE_PATH}}search?keywords=#{quoted_string(keywords)}&amp;cursor=#{quoted_string(next_cursor)}"><em>Prev</em> Old articles</a></span></p>
+<?py
+	#endif
+elif not_ajax:
+	if cursor:
+?>
+	<h2>It's already the last page.</h2>
+	<p>Why not have a look at other pages?</p>
+<?py 	else: ?>
+	<h2>Can't find out relative articles.</h2>
+	<p>Why not change the search keywords?</p>
+<?py
+	#endif
+#endif
+?>
+</section>
+<?py
+if not_ajax:
+	if GOOGLE_CSE_ID:
+		include('google_search.html')
+	#endif
+	include('footer.html')
+#endif
+?>

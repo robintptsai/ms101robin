@@ -1,0 +1,28 @@
+<?py
+from tenjin.html import checked
+include('admin_header.html')
+?>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><label for="email">Commenter's Email</label> <div class="input-field"><input type="text" id="email" name="email" value="${comment.email}"/></div></div>
+		<div><label for="content">Content</label>
+			<div class="input-field">
+			<ul class="switcher">
+				<li class="bbcode"><a href="#">BBCode</a></li>
+				<li class="html"><a href="#">HTML</a></li>
+				<li class="remove"><a href="#">Plain Text</a></li>
+			</ul>
+			<textarea id="content" name="content" rows="8" cols="120">${comment.content}</textarea>
+			</div>
+		</div>
+		<div><label>Format</label>
+			<div class="input-field">
+				<input type="checkbox" id="bbcode" name="bbcode"#{checked(comment.format & 1)}/><label for="bbcode">BBCode</label>
+				<input type="checkbox" id="html" name="html"#{checked(comment.format & 2)}/><label for="html">HTML</label>
+			</div>
+		</div>
+		<div><label for="time">Comment submit time (format is "YYYY-MM-DD HH:MM:SS", using current time if leaving as blank)</label> <div class="input-field"><input type="text" id="time" name="time" value="#{formatted_time_for_edit(comment.time)}"/></div></div>
+		<div><label for="ua">User agent information (separating by ",")</label> <div class="input-field"><input type="text" id="ua" name="ua" value="#{', '.join(comment.ua)}"/></div></div>
+		<div><input type="submit" value="Save"/></div>
+	</form>
+<?py include('admin_footer.html') ?>

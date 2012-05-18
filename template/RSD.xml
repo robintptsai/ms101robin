@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rsd xmlns="http://archipelago.phrasewise.com/rsd" version="1.0">
+	<service>
+		<engineName>Doodle</engineName>
+		<engineLink>https://bitbucket.org/keakon/doodle/</engineLink>
+		<homePageLink>#{{BLOG_HOME_FULL_URL}}</homePageLink>
+		<apis>
+			<api name="MetaWeblog" blogID="1" preferred="true" apiLink="#{{BLOG_HOME_FULL_URL}}rpc"/>
+			<api name="Blogger" blogID="1" preferred="true" apiLink="#{{BLOG_HOME_FULL_URL}}rpc"/>
+			<api name="WordPress" blogID="1" preferred="false" apiLink="#{{BLOG_HOME_FULL_URL}}rpc"/>
+		</apis>
+	</service>
+</rsd>

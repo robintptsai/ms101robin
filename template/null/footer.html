@@ -1,0 +1,57 @@
+<footer id="footer">
+<?py if page not in ('404', '500', 'profile'): ?>
+	<p class="backtotop"><a href="#">Top</a></p>
+<?py #endif ?>
+	<p class="credits">©<a href="#{{BLOG_HOME_RELATIVE_PATH}}">${{BLOG_TITLE}}</a><span>•</span>Powered by <a href="https://bitbucket.org/keakon/doodle" rel="nofollow">Doodle</a><span>•</span>Designed by <a href="mailto:robintptsai@gmail.com" rel="nofollow">robintptsai</a></p>
+<?py
+from hook import local
+
+if request.is_admin or DISPLAY_PERFORMANCE_TO_EVERYONE:
+?>
+	<p>Response time: #{int((time() - local.request_arrive_time) * 1000)}ms • Datastore time: #{int(local.db_time * 1000)}ms • Datastore access times: #{local.db_count} • Page generated time: ${formatted_time(get_local_now())}</p>
+<?py else: ?>
+	<p>Page generated time: ${formatted_time(get_local_now(), False)}</p>
+<?py #endif ?>
+</footer>
+</div>
+</div>
+<!--[if lt IE 9]><div id="noie">You may need a modern browser instead of IE.</div><![endif]-->
+<?py if page not in ('404', '500'): ?>
+<script src="/js/jquery-#{{JQUERY_VERSION}}.js"></script>
+<?py #endif ?>
+<?py if page in ('home', 'tag', 'category', 'search'): ?>
+<script src="/theme/null/js/loadpage.js?#{{CURRENT_VERSION_ID}}"></script>
+<?py elif page == 'article': ?>
+<script src="/js/highlight.pack.js"></script>
+<script src="/markitup/jquery.markitup.js"></script>
+<script src="/markitup/sets/bbcode/set.js"></script>
+<script src="/theme/null/js/msgbox.js"></script>
+<script src="/theme/null/js/comment.js?#{{CURRENT_VERSION_ID}}"></script>
+<script src="https://apis.google.com/js/plusone.js">
+<?PY if LANGUAGE != 'en-US': ?>
+{lang: '#{{LANGUAGE}}'}
+<?PY #endif ?>
+</script>
+<?py elif page == 'profile': ?>
+<script src="/theme/null/js/msgbox.js"></script>
+<script src="/theme/null/js/profile.js"></script>
+<?py #endif ?>
+<?py if page not in ('404', '500', 'profile'): ?>
+<script src="/js/scroll.js"></script>
+<?py #endif ?>
+<?PY if ENABLE_TAG_CLOUD: ?>
+<?py if _context.get('_load_tag_js', False): ?>
+<script src="/js/tag.js"></script>
+<?py #endif ?>
+<?PY #endif ?>
+<?PY if GOOGLE_ANALYTICS_ID: ?>
+<script src="#{'http://www' if request.scheme == 'http' else 'https://ssl'}.google-analytics.com/ga.js"></script>
+<script>
+_gaq.push(['_trackEvent', 'LoadTime', '${request.client_ip}', '#{request.path_qs}', new Date() - _gaq_start]);
+<?py if hasattr(request, 'current_user') and request.current_user: ?>
+_gaq.push(['_setCustomVar', 1, 'user', '${request.current_user.name}']);
+<?py #endif ?>
+</script>
+<?PY #endif ?>
+</body>
+</html>

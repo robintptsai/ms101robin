@@ -1,0 +1,65 @@
+<?py include('header.html') ?>
+<section id="content">
+	<h2 class="post-title"><a href="#{{BLOG_HOME_RELATIVE_PATH}}#{article.quoted_url()}" title="${article.title}">${article.title}</a></h2>
+	<section class="post">
+		<section id="commentlist">
+			<ol class="commentlist">
+<?py
+isHttps = request.scheme == 'https'
+for comment, user in izip(comments, comment_users):
+	comment_id = comment.key().id()
+	if user:
+		user_name = user.name
+		user_site = user.site
+	else:
+		user_name = u'anonymous'
+		user_site = None
+	#endif
+?>
+				<li><p class="comment-author"><img src="#{user.get_gravatar(isHttps)}?s=48&amp;d=monsterid" class="avatar" height="48" width="48"/><cite><a id="comment-id-#{comment_id}"
+<?py 	if user_site: ?>
+					href="${user_site}"
+<?py 	#endif ?>
+					>${user_name}</a></cite>
+<?py 	if comment.ua: ?>
+					<span class="ua">
+<?py 		for ua in comment.ua: ?>
+				<img src="/img/ua/#{ua.replace(' ', '-')}.png" alt="#{ua}" title="#{ua}"/>
+<?py 		#endfor ?>
+					</span>
+<?py 	#endif ?>
+					<br><small><strong>${formatted_time(comment.time)}</strong>
+<?py 	if request.is_admin: ?>
+				<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}user/edit/#{id}/#{comment_id}/">[User profile]</a> <a href="#{{BLOG_ADMIN_RELATIVE_PATH}}comment/edit/#{id}/#{comment_id}/">[Edit]</a> <a href="#{{BLOG_ADMIN_RELATIVE_PATH}}comment/delete/#{id}/#{comment_id}/">[Delete]</a>
+<?py 	#endif ?>
+				</small></p><div class="commententry" id="commententry-#{comment_id}"><div>#{comment.html_content()}</div></div><p class="reply"><a class="comment-reply-link" href="#respond">reply</a></p></li>
+<?py #endfor ?>
+			</ol>
+			<div class="comment-nav">
+<?py if next_cursor: ?>
+				<span class="next"><a href="#{{BLOG_HOME_RELATIVE_PATH}}comment/#{id}/#{next_cursor}">Next Page</a></span>
+<?py #endif ?>
+			</div>
+		</section>
+		<section id="respond">
+			<h4>Have something to say?</h4>
+<?py
+user = request.current_user
+if user:
+?>
+			<form action="#{{BLOG_HOME_RELATIVE_PATH}}comment/#{id}/" method="post" id="commentform">
+				<p>You are login as ${user.name}, you can <a href="/logout">logout</a> to switch to another account, or <a href="#{{BLOG_HOME_RELATIVE_PATH}}profile/">modify your profile</a>.</p>
+				<p><textarea name="comment" id="comment" cols="58" rows="10" tabindex="1"></textarea></p>
+				<p><input name="bbcode" type="checkbox" id="bbcode" tabindex="2" checked="checked"/> <label for="bbcode">Use BBCode</label></p>
+				<p><input name="submit" type="submit" id="submit" tabindex="3" value="Submit"/></p>
+			</form>
+<?py else: ?>
+			<p>You need <a href="/login">login</a> with your Google account to comment.</p>
+<?py #endif ?>
+		</section>
+	</section>
+</section>
+<?py
+include('sidebar.html')
+include('footer.html')
+?>

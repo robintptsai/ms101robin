@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="#{{LANGUAGE}}">
+<head>
+	<title>${title}</title>
+<script>
+<?PY if GOOGLE_ANALYTICS_ID: ?>
+var _gaq = [['_setAccount', '#{{GOOGLE_ANALYTICS_ID}}'], ['_trackPageview'], ['_trackPageLoadTime']];
+var _gaq_start = new Date();
+<?PY else: ?>
+var _gaq = [];
+<?PY #endif ?>
+</script>
+	<meta name="viewport" content="width=800"/>
+	<link href="#{{BLOG_HOME_RELATIVE_PATH}}feed" rel="alternate" title="${{BLOG_TITLE}} - ATOM Feed" type="application/atom+xml"/>
+	<link href="#{{BLOG_HOME_RELATIVE_PATH}}comment-feed" rel="alternate" title="${{BLOG_TITLE}} - Comment Feed" type="application/atom+xml"/>
+<?py if page == 'home': ?>
+	<link rel="EditURI" type="application/rsd+xml" title="RSD" href="rsd"/>
+<?py #endif ?>
+	<link rel="stylesheet" href="/theme/null/css/style.css?#{{CURRENT_VERSION_ID}}"/>
+<?py
+if page == 'article':
+	if request.is_spider:
+?>
+	<meta name="description" content="${strip_html(article.html_summary(), 200)}"/>
+	<link rel="canonical" href="#{{BLOG_HOME_RELATIVE_PATH}}#{article.quoted_url()}"/>
+<?py 	#endif ?>
+	<link rel="stylesheet" href="/css/sunburst.css"/>
+	<link rel="stylesheet" href="/markitup/skins/simple/style.css"/>
+	<link rel="stylesheet" href="/markitup/sets/bbcode/style.css"/>
+<?py elif page == 'comments': ?>
+	<meta name="robots" content="nofollow"/>
+<?py #endif ?>
+</head>
+<body>
+<div id="wrapper">
+<div id="header-wrapper">
+<header id="header">
+	<h1 id="logo"><a href="#{{BLOG_HOME_RELATIVE_PATH}}">${{BLOG_TITLE}}</a></h1>
+	<p class="description">${{BLOG_SUB_TITLE}}</p>
+	<p class="socialmedia">
+<?PY
+from model import Subscriber
+for social_media in SOCIAL_MEDIAS:
+	rel = social_media.get('rel', '')
+	if rel:
+?>
+		<a href="#{{social_media['url']}}" title="${{social_media['title']}}" rel="#{{rel}}"><img src="/theme/null/img/socialmedia/#{{social_media['icon']}}.png" alt="${{social_media['title']}}" height="24" width="24"/>${{social_media['text']}}</a>
+<?PY 	else: ?>
+		<a href="#{{social_media['url']}}" title="${{social_media['title']}}"><img src="/theme/null/img/socialmedia/#{{social_media['icon']}}.png" alt="${{social_media['title']}}" height="24" width="24"/>${{social_media['text']}}</a>
+<?PY
+ 	#endif
+#endfor
+?>
+		<a href="/feed" title="Why not subscribe right now?" rel="nofollow"><img src="/theme/null/img/socialmedia/atom.png" alt="${{social_media['title']}}" height="24" width="24"/>#{{Subscriber.get_subscribers()}} subscribers</a>
+	</p>
+	<nav>
+		<ul id="nav">
+<?PY
+from tenjin.html import tagattr
+
+next_levels = [nav_link['level'] for nav_link in NAV_LINKS[1:]] + [1]
+for nav_link, next_level in izip(NAV_LINKS, next_levels):
+	current_level = nav_link['level']
+	if current_level == next_level:
+		rel = nav_link.get('rel', '')
+?>
+			<li><a href="#{{nav_link['url']}}"#{{tagattr('rel', rel, rel)}}>${{nav_link['text']}}</a></li>
+<?PY 	elif current_level < next_level: ?>
+			<li><a href="#{{nav_link['url']}}"#{{tagattr('rel', rel, rel)}}>${{nav_link['text']}}</a><ul>
+<?PY 	else: ?>
+			<li><a href="#{{nav_link['url']}}"#{{tagattr('rel', rel, rel)}}>${{nav_link['text']}}</a></li>#{{'</ul></li>' * (current_level - next_level)}}
+<?PY
+	#endif
+#endfor
+?>
+			<li><a href="/login">login|logout</a></li>
+<?py if request.is_admin: ?>
+			<li><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}">Manage blog</a></li>
+			<li><a href="/_ah/admin/">Dev console</a></li>
+<?py #endif ?>
+		</ul>
+	</nav>
+	<form method="get" id="searchform" action="#{{BLOG_HOME_RELATIVE_PATH}}search">
+		<input type="text" placeholder="Looking for something?" value="${keywords if 'keywords' in _context else ''}" name="keywords" id="keywords"/>
+		<input type="submit" value="Search" id="searchsubmit"/>
+	</form>
+</header>
+</div>
+<div id="body">

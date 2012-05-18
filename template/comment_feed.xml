@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+	xml:lang="#{{LANGUAGE}}"
+	xml:base="#{{BLOG_HOME_FULL_URL}}">
+	<title>${{BLOG_TITLE}} - Comments Feed</title>
+	<id>#{{BLOG_COMMENT_FEED_URL}}</id>
+	<link href="#{{BLOG_HOME_FULL_URL}}" rel="alternate" type="text/html"/>
+	<link href="#{{BLOG_COMMENT_FEED_URL}}" rel="self"/>
+<?PY for hub in HUBS: ?>
+	<link rel="hub" href="#{{hub}}"/>
+<?PY #endfor ?>
+	<updated>#{last_updated}</updated>
+	<author>
+		<name>${{BLOG_AUTHOR}}</name>
+	</author>
+<?py for (comment, article, user) in izip(*(comments, articles, users)): ?>
+	<entry>
+		<link href="#{{BLOG_HOME_FULL_URL}}#{article.quoted_url()}"/>
+		<id>#{{BLOG_HOME_FULL_URL}}article/#{comment.parent_key().id()}#comment-author-#{comment.key().id()}</id>
+		<title>Re: ${article.title}</title>
+		<content type="html">${comment.html_content()}</content>
+		<author>
+			<name>${user.name}</name>
+		</author>
+		<updated>#{iso_time_format(comment.time)}</updated>
+	</entry>
+<?py #endfor ?>
+</feed>

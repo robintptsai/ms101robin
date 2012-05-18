@@ -1,0 +1,22 @@
+User-agent: *
+User-agent: Googlebot
+User-agent: Googlebot-Mobile
+User-agent: Baiduspider-mobile
+Disallow: /_ah/
+Disallow: /admin/
+Disallow: /comment-feed
+Disallow: /feed
+Disallow: /hub/
+Disallow: /login
+Disallow: /logout
+Disallow: /search
+Disallow: /wap/
+
+User-agent: Googlebot
+Allow: /feed
+
+User-agent: Googlebot-Mobile
+Allow: /wap/
+
+User-agent: Baiduspider-mobile
+Allow: /wap/

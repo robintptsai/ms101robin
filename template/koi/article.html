@@ -1,0 +1,99 @@
+<?py
+include('header.html')
+
+article_id = article.key().id()
+dt = convert_to_local_time(article.time)
+
+category_template = '<a href="' + BLOG_HOME_RELATIVE_PATH + 'category/%s">%s</a>'
+category_name = escape(article.category_name())
+category_link = category_template % (quoted_string(category_name), category_name) if category_name else 'None'
+
+tag_template = '<a href="' + BLOG_HOME_RELATIVE_PATH + 'tag/%s">%s</a>'
+tags = article.tags
+tags_link = ', '.join([tag_template % (quoted_string(escape(tag)), escape(tag)) for tag in tags]) if tags else 'None'
+?>
+<section id="content">
+	<section class="post">
+		<article>
+			<h2 class="post-title"><a href="#{{BLOG_HOME_RELATIVE_PATH}}#{article.quoted_url()}" title="${article.title}">${article.title}</a></h2>
+			<div class="post-date"><span class="year">#{dt.year}</span> <span class="month">#{dt.strftime('%b')}</span> <span class="day">#{dt.day}</span> <span class="time">#{dt.strftime('%I:%M %p')}</span> <span class="postcomment">#{article.hits} view#{'s' if article.hits > 1 else ''}</span> <div class="g-plusone" data-size="tall"></div></div>
+			<p class="post-data">
+				<span>Category: #{category_link}</span> <span>Tags: #{tags_link}</span>
+<?py if request.is_admin: ?>
+			<span id="post-operation"><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}article/edit/#{article_id}">[Edit]</a> <a href="#{{BLOG_ADMIN_RELATIVE_PATH}}article/delete/#{article_id}">[Delete]</a></span>
+<?py #endif ?>
+			</p>
+			<section class="article-content">
+<?py for _ in cache_as('article:%s' % article_id, ARTICLE_CACHE_TIME): ?>
+				#{article.html_content()}
+<?py #endfor ?>
+			</section>
+		</article>
+		<section id="relative-articles">
+			You may be interested in these articles:
+		</section>
+<?py
+for _ in cache_as('nearby_articles:%s' % article_id, ARTICLE_CACHE_TIME):
+	previous_article, next_article = article.nearby_articles(article.published)
+	if previous_article or next_article:
+?>
+		<p class="post-nav">
+<?py 		if previous_article: ?>
+			<span class="previous"><a href="#{{BLOG_HOME_RELATIVE_PATH}}#{previous_article.quoted_url()}" rel="prev"><em>Prev</em> ${previous_article.title}</a></span>
+<?py
+		#endif
+		if next_article:
+?>
+			<span class="next"><a href="#{{BLOG_HOME_RELATIVE_PATH}}#{next_article.quoted_url()}" rel="next"><em>Next</em> ${next_article.title}</a></span>
+<?py 		#endif ?>
+		</p>
+<?py
+	#endif
+#endfor
+?>
+		<section id="comments_section">
+			<h4 id="comments">#{article.replies} comments<em>(<a href="#respond">reply?</a>)</em> <span id="comment-order-asc" class="selected">Positive</span> <span id="comment-order-desc">Reverse</span></h4>
+		</section>
+		<section id="commentlist">
+			<ol class="commentlist"></ol>
+<?py if article.replies: ?>
+			<p id="more-hint">You can scroll down to load more comments, or click here to <a href="javascript:;">disable auto-load</a>.</p>
+			<noscript>
+				<div class="comment-nav">
+					<span class="next"><a href="#{{BLOG_HOME_RELATIVE_PATH}}comment/#{article_id}/">View comments</a></span>
+				</div>
+			</noscript>
+<?py #endif ?>
+		</section>
+		<section id="respond">
+			<h4>Have something to say?</h4>
+<?py
+user = request.current_user
+if user:
+?>
+			<form action="#{{BLOG_HOME_RELATIVE_PATH}}comment/#{article_id}/" method="post" id="commentform">
+				<p>You are login as ${user.name}, you can <a href="/logout">logout</a> to switch to another account, or <a href="#{{BLOG_HOME_RELATIVE_PATH}}profile/">modify your profile</a>.</p>
+				<p><textarea name="comment" id="comment" cols="58" rows="10" tabindex="1"></textarea></p>
+				<p><input name="bbcode" type="checkbox" id="bbcode" tabindex="2" checked="checked"/> <label for="bbcode">Use BBCode</label></p>
+				<p><small>Tips: You can click the "REPLY"button at the right side of a comment to reply it, so that the author of that comment will receive an Email notification.</small></p>
+				<p><input name="submit" type="submit" id="submit" tabindex="3" value="Submit"/></p>
+			</form>
+<?py else: ?>
+			<p>You need <a href="/login">login</a> with your Google account to comment.</p>
+<?py #endif ?>
+		</section>
+	</section>
+</section>
+<script>
+var article_id = '#{article_id}';
+var home_path = '#{{BLOG_HOME_RELATIVE_PATH}}';
+<?py if request.is_admin: ?>
+var comment_delete_url = '#{{BLOG_ADMIN_RELATIVE_PATH}}comment/delete/#{article_id}/';
+var comment_edit_url = '#{{BLOG_ADMIN_RELATIVE_PATH}}comment/edit/#{article_id}/';
+var user_edit_url = '#{{BLOG_ADMIN_RELATIVE_PATH}}user/edit/#{article_id}/';
+<?py #endif ?>
+</script>
+<?py
+include('sidebar.html')
+include('footer.html')
+?>

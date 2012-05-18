@@ -1,0 +1,32 @@
+<?py
+from tenjin.html import selected
+include('admin_header.html')
+?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}user/search/" class="current">Search user</a>
+	</nav>
+<div id="container">
+	<form method="get" action="">
+		<label for="filter">Search by</label>
+		<select name="filter">
+			<option value="name">User name</option>
+			<option value="email"#{selected(filter == 'email')}>Email</option>
+		</select>
+		<input type="text" id="value" name="value" value="${value}"/>
+		<input type="submit" value="Search"/>
+	</form>
+<?py if users: ?>
+	<table class="search-table">
+	<thead><tr><th>User name</th><th>Email</th><th>Status</th></tr></thead>
+	<tbody>
+<?py
+	for user in users:
+		email = user.key().name()
+?>
+	<tr><td><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}user/edit/?email=#{email}" title="Edit user">${user.name}</a></td><td>#{email}</td><td>${user.status()}</td></tr>
+<?py 	#endfor ?>
+	</tbody>
+	</table>
+<?py #endif ?>
+</div>
+<?py include('admin_footer.html') ?>

@@ -1,0 +1,28 @@
+<?py include('admin_header.html') ?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/new/">New category</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/delete/" class="current">Delete category</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/move/">Move category</a>
+	</nav>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><label for="path">Category path (separating by "${{CATEGORY_PATH_DELIMETER}}")</label>
+			<div class="input-field">
+			<select id="path" name="path">
+<?py for category in categories: ?>
+				<option value="${category.path}">${category.path}</option>
+<?py #endfor ?>
+			</select>
+			</div>
+		</div>
+		<div><input type="submit" value="Delete"/></div>
+	</form>
+	<div class="notice">Notice:
+		<ul>
+			<li>Delete category will empty the category property of its articles. You can <a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/move/">move its articles to other category</a> before this operation.</li>
+			<li>If it contains sub categories, you need handle them first.</li>
+			<li>This operation may take much time, so please don't change this category or its articles until you receive a mail that notices the task has been finished.</li>
+			<li>If you don't receive notification email for a long time, you can login to the <a href="https://appengine.google.com">Admin Console</a> to check the status of Task Queues, and delete it if needed.</li>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

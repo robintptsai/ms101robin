@@ -1,0 +1,39 @@
+<?py include('admin_header.html') ?>
+<div class="info"></div>
+<div id="container">
+	<h3>Flush cache</h3>
+	<div class="grid">
+		<input type="button" value="Flush" id="flush-cache"/> Flush memcache and server cache.
+	</div>
+
+	<h3>Generate sitemap</h3>
+	<div class="grid">
+		<input type="button" value="Generate" id="generate-sitemap"/> Generate sitemap manually. It may take a while to finish. It will be automatically generated once a day, so you should do this operation only after import many articles.
+	</div>
+
+	<h3>Fix datastore</h3>
+	<div class="grid">
+		<input type="button" value="Generate" id="generate-missing-entities"/> Search all articles and comments, generate the missing categories, tags and users. You can use it after importing if you meet some error.
+	</div>
+
+	<h3>Generate historical feed</h3>
+	<div class="grid">
+		<input type="button" value="Generate" id="generate-feed"/> You can use it to generate historical feed and notify Google Reader to record it. You should change the URL mappings at blog.py, uncomment the line contains view.GeneratedFeedPage.
+	</div>
+
+	<h3>Update tags count</h3>
+	<div class="grid">
+		<input type="button" value="Update" id="update-tags-count"/> You can use it to update tags' articles count if incorrect.
+	</div>
+
+	<h3>Update articles' replies</h3>
+	<div class="grid">
+		<input type="button" value="Update" id="update-articles-replies"/> You can use it to update articles' replies if incorrect.
+	</div>
+
+	<h3>Update subscribers</h3>
+	<div class="grid">
+		<input type="button" value="Update" id="remove-old-subscribers"/> You can use it to update feed subscribers if incorrect.
+	</div>
+</div>
+<?py include('admin_footer.html') ?>

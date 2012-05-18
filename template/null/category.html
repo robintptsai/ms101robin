@@ -1,0 +1,35 @@
+<?py
+from tenjin.html import tagattr
+not_ajax = not request.is_xhr
+if not_ajax:
+	include('header.html')
+#endif
+?>
+<section id="content"#{tagattr('class', not articles, 'block')}>
+<?py
+if articles:
+	include('articles.html')
+	if next_cursor:
+?>
+	<p class="post-nav"><span class="previous"><a href="#{{BLOG_HOME_RELATIVE_PATH}}category/#{quoted_string(category_name)}?cursor=#{quoted_string(next_cursor)}">« Old articles</a></span></p>
+<?py
+	#endif
+elif not_ajax:
+	if cursor:
+?>
+	<h2>It's already the last page.</h2>
+	<p>Why not have a look at other pages?</p>
+<?py 	else: ?>
+	<h2>There isn't any articles in this category now.</h2>
+	<p>Please visit next time.</p>
+<?py
+	#endif
+#endif
+?>
+</section>
+<?py
+if not_ajax:
+	include('sidebar.html')
+	include('footer.html')
+#endif
+?>

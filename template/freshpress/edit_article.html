@@ -1,0 +1,69 @@
+<?py include('admin_header.html') ?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}article/new/">New article</a>
+		<a href="javascript:;" class="current">Edit article</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}article/unpublished/" target="_blank">Unpublished articles</a>
+	</nav>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><label for="title">Title</label> <div class="input-field"><input type="text" id="title" name="title" value="${article.title}"/></div></div>
+		<div><label for="url">URL (format should be "YYYY/MM/DD/title", automatically generated if leaving as blank)</label> <div class="input-field"><input type="text" id="url" name="url" value="${article.url}"/></div></div>
+		<div><label for="content">Content</label>
+			<div class="input-field">
+			<ul class="switcher">
+				<li class="bbcode"><a href="#">BBCode</a></li>
+				<li class="html"><a href="#">HTML</a></li>
+				<li class="remove"><a href="#">Plain Text</a></li>
+			</ul>
+			<textarea id="content" name="content" rows="8" cols="120">${article.content}</textarea>
+			</div>
+		</div>
+		<div><label for="keywords">Search keywords (separating by ",")</label> <div class="input-field"><input type="text" id="keywords" name="keywords" value="${', '.join(article.keywords)}"/></div></div>
+		<div><label>Tags</label>
+			<div class="input-field">
+<?py
+from tenjin.html import checked, selected
+
+article_category = article.category
+article_format = article.format
+
+for index, tag in enumerate(tags):
+	tag = tag.key().name()
+?>
+			<input type="checkbox" name="tags" id="tag#{index}" value="${tag}"#{checked(tag in article.tags)}/><label for="tag#{index}">${tag}</label>
+<?py #endfor ?>
+			</div>
+		</div>
+		<div><label for="category">Category</label>
+			<div class="input-field">
+			<select id="category" name="category">
+				<option value="" selected="selected"#{selected(not article_category)}>None</option>
+<?py
+for category in categories:
+	category_path = category.path
+?>
+				<option value="${category.path}"#{selected(article_category == category_path)}>${category_path}</option>
+<?py #endfor ?>
+			</select>
+			</div>
+		</div>
+		<div><label>Format</label>
+			<div class="input-field">
+				<input type="checkbox" id="bbcode" name="bbcode"#{checked(article_format & 1)}/><label for="bbcode">BBCode</label>
+				<input type="checkbox" id="html" name="html"#{checked(article_format & 2)}/><label for="html">HTML</label>
+			</div>
+		</div>
+		<div><label for="published">Publish status</label> <div class="input-field"><input type="checkbox" id="published" name="published"#{checked(article.published)}/><label for="published">Published</label></div></div>
+<?PY if TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET: ?>
+<?py
+import model
+if model.Twitter.get_twitter():
+?>
+		<div><label for="twitter">Share to Twitter (available only when the article is published)</label> <div class="input-field"><input type="checkbox" id="twitter" name="twitter"/><label for="twitter">Share</label></div></div>
+<?py #endif ?>
+<?PY #endif ?>
+		<div><label for="time">Publish time (format is "YYYY-MM-DD HH:MM:SS", using current time if leaving as blank)</label> <div class="input-field"><input type="text" id="time" name="time" value="#{formatted_time_for_edit(article.time)}"/></div></div>
+		<div><label for="mod_time">Last modified time (if title, URL, content or publish status has been changed, you'd better leave it as blank to notify feed updates)</label> <div class="input-field"><input type="text" id="mod_time" name="mod_time" value="#{formatted_time_for_edit(article.mod_time)}"/></div></div>
+		<div><input type="submit" value="Save"/></div>
+	</form>
+<?py include('admin_footer.html') ?>

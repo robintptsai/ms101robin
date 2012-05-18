@@ -1,0 +1,12 @@
+<?py include('admin_header.html') ?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/new/" class="current">New category</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/delete/">Delete category</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/move/">Move category</a>
+	</nav>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><label for="path">Category path (separating by "${{CATEGORY_PATH_DELIMETER}}")</label> <div class="input-field"><input type="text" id="path" name="path"/></div></div>
+		<div><input type="submit" value="Add"/></div>
+	</form>
+<?py include('admin_footer.html') ?>
